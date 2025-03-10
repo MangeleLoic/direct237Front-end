@@ -1,0 +1,34 @@
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  margin-top: 60px; 
+}
+
+.marquee-text {
+  font-size: 2rem;
+  white-space: nowrap;
+  animation: marquee 15s linear infinite;
+  color: #d02613;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+
+.home-bg {
+  background-image: url('https://static.vecteezy.com/ti/vettori-gratis/t2/3810734-camerun-realistico-sventolando-bandiera-design-vettoriale.jpg'); 
+  background-size: cover; /* Rende l'immagine di sfondo coprente */
+  background-position: center; /* Posiziona l'immagine al centro */
+  height: 100vh; /* Imposta l'altezza a tutta la finestra */
+  display: flex;
+  justify-content: center; /* Centra il contenuto */
+  align-items: center; /* Centra il contenuto */
+  color: white; /* Colore del testo sopra il background */
+}
+
