@@ -20,7 +20,7 @@ function Admin() {
 
   return (
     <Container className="mt-4">
-      <h2>Panneau d'administration</h2>
+      <h2 className="mt-5 p-3 text-center">Panneau d'administration</h2>
       <AjouterVoyage onAdd={ajouterVoyage} />
       <ListeVoyages voyages={voyages} />
       <AjouterReservation voyages={voyages} onAdd={ajouterReservation} />
