@@ -34,7 +34,7 @@ function WeatherBox({ city, lat, lon }) {
   };
 
   return (
-    <div className="weather-box">
+    <div className="weather-box bg-success ">
       <h5>{city}</h5>
       {loading ? (
         <Spinner animation="border" variant="primary" />
