@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container } from 'react-bootstrap';
+import './MyNavBar.css';
 
 function MyNavBar() {
   return (
-    <Navbar bg="success" variant="dark" expand="lg" fixed="top">
+    <Navbar className="navbar-custom" variant="dark" expand="lg" fixed="top">
+
       <Container>
         <Navbar.Brand as={Link} to="/">Direct 237</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
