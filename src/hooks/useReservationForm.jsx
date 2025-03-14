@@ -149,12 +149,21 @@ export function useReservationForm(voyages, onAdd, fetchVoyages = () => {}) {
     setErrors({});
   };
 
-  return {
-    formState,
-    errors,
-    handleChange,
-    handleSubmit,
-    resetForm,
-    regenerateTrackingNumber
-  };
+ 
+const setFormValue = (field, value) => {
+  setFormState(prevState => ({
+    ...prevState,
+    [field]: value
+  }));
+};
+
+
+return {
+  formState,
+  errors,
+  handleChange,
+  handleSubmit,
+  regenerateTrackingNumber,
+  setFormValue 
+};
 }

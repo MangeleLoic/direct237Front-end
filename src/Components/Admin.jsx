@@ -66,33 +66,52 @@ function Admin() {
   }, []);
   
   
-  useEffect(() => {
-    const fetchClients = async () => {
-      const token = localStorage.getItem("token");
-  
-      try {
-        const response = await fetch("http://localhost:3001/clients", {
+ useEffect(() => {
+  const fetchClients = async () => {
+    const token = localStorage.getItem("token");
+    let allClients = [];
+    let page = 1;
+    let hasMorePages = true;
+
+    try {
+      
+      while (hasMorePages) {
+        const response = await fetch(`http://localhost:3001/clients?page=${page}`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-  
+
         if (!response.ok) {
           throw new Error("Échec de la récupération des clients !");
         }
-  
-        const data = await response.json();
-        setClients(data.content || data);  
-      } catch (error) {
-        console.error("Erreur:", error.message);
-      }
-    };
-  
-    fetchClients();
-  }, []);
 
+        const data = await response.json();
+        const clients = data.content || [];
+        
+        if (clients.length > 0) {
+          allClients = [...allClients, ...clients];
+          page++;
+        } else {
+          hasMorePages = false;
+        }
+        
+        
+        if (data.totalPages && page > data.totalPages) {
+          hasMorePages = false;
+        }
+      }
+
+      setClients(allClients);
+    } catch (error) {
+      console.error("Erreur:", error.message);
+    }
+  };
+
+  fetchClients();
+}, []);
   const ajouterVoyage = (nouveauVoyage) => {
     setVoyages([...voyages, { id: (voyages.length + 1).toString(), ...nouveauVoyage }]);
   };

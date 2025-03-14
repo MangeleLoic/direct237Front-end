@@ -1,15 +1,51 @@
 
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import { useReservationForm } from "../hooks/useReservationForm";
+import { useState } from "react";
 
-function AjouterReservation({ voyages, onAdd, fetchVoyages }) {
+function AjouterReservation({ voyages, clients, onAdd, fetchVoyages }) {
+  const [useExistingClient, setUseExistingClient] = useState(true);
+  const [selectedClientId, setSelectedClientId] = useState("");
+  
   const {
     formState,
     errors,
     handleChange,
     handleSubmit,
     regenerateTrackingNumber,
+    setFormValue,
   } = useReservationForm(voyages, onAdd, fetchVoyages);
+
+  
+  const handleClientTypeChange = (e) => {
+    const useExisting = e.target.value === "existing";
+    setUseExistingClient(useExisting);
+    
+    
+    setFormValue("nomClient", "");
+    setFormValue("telephoneClient", "");
+    setSelectedClientId("");
+  };
+
+  
+  const handleClientSelection = (e) => {
+    const clientId = e.target.value;
+    setSelectedClientId(clientId);
+    
+    if (clientId) {
+      const selectedClient = clients.find(client => client.id.toString() === clientId);
+      if (selectedClient) {
+        setFormValue("nomClient", selectedClient.nom || "");
+        setFormValue("telephoneClient", selectedClient.telephone || "");
+        setFormValue("clientId", selectedClient.id);
+      }
+    } else {
+      
+      setFormValue("nomClient", "");
+      setFormValue("telephoneClient", "");
+      setFormValue("clientId", "");
+    }
+  };
 
   return (
     <Container className="mt-4">
@@ -20,6 +56,58 @@ function AjouterReservation({ voyages, onAdd, fetchVoyages }) {
       )}
       
       <Form onSubmit={handleSubmit}>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>Type de client</Form.Label>
+          <div>
+            <Form.Check
+              inline
+              type="radio"
+              label="Client existant"
+              name="clientType"
+              value="existing"
+              checked={useExistingClient}
+              onChange={handleClientTypeChange}
+              id="existing-client"
+            />
+            <Form.Check
+              inline
+              type="radio"
+              label="Nouveau client"
+              name="clientType"
+              value="new"
+              checked={!useExistingClient}
+              onChange={handleClientTypeChange}
+              id="new-client"
+            />
+          </div>
+        </Form.Group>
+
+        
+        {useExistingClient && (
+          <Form.Group className="mb-3">
+            <Form.Label>Sélectionner un client</Form.Label>
+            <Form.Select
+              value={selectedClientId}
+              onChange={handleClientSelection}
+              isInvalid={useExistingClient && !selectedClientId && !!errors.nomClient}
+            >
+              <option value="">Choisir un client</option>
+              {clients.map((client) => (
+                <option key={client.id} value={client.id}>
+                  {client.nomClient} - {client.numeroTelephone}
+                </option>
+              ))}
+            </Form.Select>
+            {useExistingClient && !selectedClientId && errors.nomClient && (
+              <Form.Control.Feedback type="invalid">
+                Veuillez sélectionner un client
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+        )}
+
+        
         <Form.Group className="mb-3">
           <Form.Label>Nom du Client</Form.Label>
           <Form.Control
@@ -29,14 +117,16 @@ function AjouterReservation({ voyages, onAdd, fetchVoyages }) {
             onChange={handleChange}
             isInvalid={!!errors.nomClient}
             required
+            readOnly={useExistingClient}
+            disabled={useExistingClient}
           />
-          {errors.nomClient && (
+          {errors.nomClient && !useExistingClient && (
             <Form.Control.Feedback type="invalid">
               {errors.nomClient}
             </Form.Control.Feedback>
           )}
         </Form.Group>
-
+        
         <Form.Group className="mb-3">
           <Form.Label>Téléphone du Client</Form.Label>
           <Form.Control
@@ -46,14 +136,17 @@ function AjouterReservation({ voyages, onAdd, fetchVoyages }) {
             onChange={handleChange}
             isInvalid={!!errors.telephoneClient}
             required
+            readOnly={useExistingClient}
+            disabled={useExistingClient}
           />
-          {errors.telephoneClient && (
+          {errors.telephoneClient && !useExistingClient && (
             <Form.Control.Feedback type="invalid">
               {errors.telephoneClient}
             </Form.Control.Feedback>
           )}
         </Form.Group>
-
+        
+        
         <Form.Group className="mb-3">
           <Form.Label>Ville</Form.Label>
           <Form.Control
