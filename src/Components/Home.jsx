@@ -12,6 +12,9 @@ function Home() {
         </h1>
       </div>
 
+      <div className='bg-warning text-center mt-4'>
+        <h2>!!!!!!!!!WORK IN PROGRESS!!!!!!!!!!</h2>
+      </div>
       <div className="container mt-4">
         <div className="row">
           {[...Array(8)].map((_, index) => (

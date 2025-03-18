@@ -40,7 +40,11 @@ function Contact() {
   };
 
   return (
-    <div className="container contact-container">
+    
+    <div className="container contact-container mt-5 pt-4">
+       <div className='bg-warning text-center mt-3 pt-2'>
+        <h2>!!!!!!!!!WORK IN PROGRESS!!!!!!!!!!</h2>
+      </div>
       <h2 className="text-center">Notre histoire</h2>
       <div className="row">
         {[...Array(4)].map((_, index) => (

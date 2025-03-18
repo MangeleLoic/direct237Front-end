@@ -41,22 +41,32 @@ function Admin() {
   useEffect(() => {
     const fetchReservations = async () => {
       const token = localStorage.getItem("token");
+      let allReservations = [];
+      let page = 0;
+      let totalPages = 1; 
   
       try {
-        const response = await fetch("http://localhost:3001/reservations", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        while (page < totalPages) {
+          const response = await fetch(`http://localhost:3001/reservations?page=${page}&size=10`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
   
-        if (!response.ok) {
-          throw new Error("Échec de la récupération des réservations !");
+          if (!response.ok) {
+            throw new Error("Échec de la récupération des réservations !");
+          }
+  
+          const data = await response.json();
+          allReservations = [...allReservations, ...data.content];
+          
+          totalPages = data.totalPages; 
+          page++;
         }
   
-        const data = await response.json();
-        setReservations(data.content);  
+        setReservations(allReservations);
       } catch (error) {
         console.error("Erreur:", error.message);
       }
@@ -64,6 +74,7 @@ function Admin() {
   
     fetchReservations();
   }, []);
+  
   
   
  useEffect(() => {
@@ -119,6 +130,8 @@ function Admin() {
   const ajouterReservation = (nouvelleReservation) => {
     setReservations([...reservations, nouvelleReservation]);
   };
+
+  
 
   return (
     <Container className="admin-container mt-4">
